@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pdouvch Service</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+
+<body>
+    <div align="center" ; style="padding: 20px;">
+        <h1>Upload a video file</h1>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="video">
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+    <div id="scene" class="parallax">
+        <div data-depth="0.2"><img src="/images/image1.jpg"></div>
+        <div data-depth="0.4"><img src="/images/image2.jpg"></div>
+        <div data-depth="0.6"><img src="/images/image3.jpg"></div>
+    </div>
+    <script src="/scripts/parallax.js"></script>
+
+</body>
+
+</html>
