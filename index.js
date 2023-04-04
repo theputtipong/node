@@ -12,7 +12,7 @@ app.set("view engine", "ejs");
 
 app.use(express.static(`public`));
 
-app.get("/vdo5min", function (req, res) {
+app.get("/trimvdo", function (req, res) {
   res.render("index");
 });
 
