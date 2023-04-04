@@ -4,20 +4,16 @@ const { spawn } = require("child_process");
 const ffmpegPath = "./ffmpeg";
 const fs = require("fs");
 const api = express();
-const path = require('path');
 const upload = multer({ dest: `uploads/` });
 
 api.set("view engine", "ejs");
 
-const public = path.join(__dirname, 'public');
-api.use('/api', express.static(public));
-
-api.get("/api/", function (req, res) {
-  res.send;
+api.get("/api", function (req, res) {
+  res.send({ result: 'api ready to use' });
 });
 
 api.get("/api/trimvdo", function (req, res) {
-  res.send({ result: 'api ready to use' });
+  res.render("index");
 });
 
 api.post(`/api/upload`, upload.single("video"), (req, res) => {
