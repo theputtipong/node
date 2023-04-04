@@ -38,7 +38,6 @@ api.post(`/api/upload`, upload.single("video"), (req, res) => {
         console.error(`Error downloading file: ${err}`);
         res.status(500).send("Error downloading file");
       } else {
-        // Delete the uploaded and trimmed files
         fs.unlinkSync(inputFile.path);
         fs.unlinkSync(outputFile);
       }
