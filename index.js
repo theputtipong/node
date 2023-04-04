@@ -3,20 +3,20 @@ const multer = require("multer");
 const { spawn } = require("child_process");
 const ffmpegPath = "./ffmpeg";
 const fs = require("fs");
-const api = express();
+const app = express();
 const upload = multer({ dest: `uploads/` });
 
-api.set("view engine", "ejs");
+app.set("view engine", "ejs");
 
-api.get("/api", function (req, res) {
+app.get("/api", function (req, res) {
   res.send({ result: 'api ready to use' });
 });
 
-api.get("/api/trimvdo", function (req, res) {
+app.get("/api/trimvdo", function (req, res) {
   res.render("index");
 });
 
-api.post(`/api/upload`, upload.single("video"), (req, res) => {
+app.post(`/api/upload`, upload.single("video"), (req, res) => {
   const inputFile = req.file;
 
   const outputFile = `uploads/${inputFile.originalname.split(".")[0]}_trimmed.mp4`;
@@ -46,6 +46,6 @@ api.post(`/api/upload`, upload.single("video"), (req, res) => {
   });
 });
 
-api.listen(80, () => {
+app.listen(80, () => {
   console.log(`Server running at 80`);
 });
