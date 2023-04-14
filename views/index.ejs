@@ -1,15 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pdouvch Service</title>
+  <meta charset="UTF-8">
+  <title>Uploaded Videos</title>
+  <style>
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    li {
+      margin: 10px;
+      width: calc(33.33% - 20px);
+    }
+    video {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
 </head>
 <body>
-    <div align="center" ; style="padding: 20px;">
-        <h1>Upload a video file</h1>
-        <form action="/api/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="video">
-            <button type="submit">Upload</button>
-        </form>
-    </div>
+  <h1>Uploaded Videos</h1>
+  <% if (videos.length === 0) { %>
+    <p>No videos uploaded yet</p>
+  <% } else { %>
+    <ul>
+      <% videos.forEach(video => { %>
+        <li>
+          <video controls>
+            <source src="/uploads/<%= video %>" type="video/mp4">
+            <source src="/uploads/<%= video %>" type="video/webm">
+            <source src="/uploads/<%= video %>" type="video/ogg">
+          </video>
+          <p><%= video %></p>
+          <a href="/download/<%= video %>" download>Download</a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
 </body>
 </html>
