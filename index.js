@@ -5,16 +5,16 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 
-const app = express();
+const api = express();
 
-app.use(cors(
+api.use(cors(
   {
-    origin: 'http://localhost:80/list'
+    origin: 'https://pdouvch.com/api/*'
   }
 ));
 
 const corsOptions = {
-  origin: 'http://localhost:80/list',
+  origin: 'https://pdouvch.com/api/list',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -29,16 +29,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+api.set('views', path.join(__dirname, 'views'));
+api.set('view engine', 'ejs');
 
 // Home page route
-app.get('/', (req, res) => {
+api.get('/api', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 
-app.get('/list', cors(corsOptions),(req, res) => {
+api.get('/api/list', cors(corsOptions),(req, res) => {
   // Read the contents of the uploads directory
   fs.readdir('uploads', (err, files) => {
     if (err) {
@@ -58,13 +58,13 @@ app.get('/list', cors(corsOptions),(req, res) => {
 });
 
 // Upload file route
-app.post('/upload', upload.single('video'), async (req, res) => {
+api.post('/api/upload', upload.single('video'), async (req, res) => {
   try {
     const { mimetype, size } = req.file;
 
     // Check if uploaded file is a video and its size is less than or equal to 300MB
     if (mimetype.startsWith('video/') && size <= 300000000) {
-      const video = await new ffmpeg('ffmpeg');
+      const video = await new ffmpeg('./ffmpeg');
       // const video = await new ffmpeg(req.file.path);
 
       // Get video duration in seconds
@@ -90,11 +90,11 @@ app.post('/upload', upload.single('video'), async (req, res) => {
 
         // Send response indicating that video was uploaded and processed successfully
         // res.send('Video was uploaded and processed successfully!');
-        res.redirect('/list');
+        res.redirect('/api/list');
       } else {
         // Send response indicating that video was uploaded successfully but was not processed
         // res.send('Video was uploaded successfully but was not processed because its duration is less than or equal to 5 minutes.');
-        res.redirect('/list');
+        res.redirect('/api/list');
       }
     } else {
       // Send response indicating that uploaded file is not a video or its size is more than 300MB
@@ -107,7 +107,7 @@ app.post('/upload', upload.single('video'), async (req, res) => {
 });
 
 
-app.get('/download/:filename', (req, res) => {
+api.get('/api/download/:filename', (req, res) => {
   const filePath = `${__dirname}/uploads/${req.params.filename}`;
   
   if (!fs.existsSync(filePath)) {
@@ -117,7 +117,7 @@ app.get('/download/:filename', (req, res) => {
   res.download(filePath);
 });
 
-app.get('/delete/:filename', (req, res) => {
+api.get('/api/delete/:filename', (req, res) => {
   const folderPath = path.join(__dirname, 'uploads');
   const filePath = path.join(folderPath, req.params.filename);
   fs.unlink(filePath, err => {
@@ -126,10 +126,10 @@ app.get('/delete/:filename', (req, res) => {
       return res.status(500).send('Error deleting video');
     }
     // res.send('Video deleted successfully');
-    res.redirect('/list');
+    res.redirect('/api/list');
   });
 });
 
-app.listen(80, () => {
+api.listen(80, () => {
   console.log('Server is running on port 80');
 });
