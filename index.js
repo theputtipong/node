@@ -9,12 +9,12 @@ const app = express();
 
 app.use(cors(
   {
-    origin: 'http://localhost:3030/listuploaded'
+    origin: 'http://localhost:80/list'
   }
 ));
 
 const corsOptions = {
-  origin: 'http://localhost:3030/listuploaded',
+  origin: 'http://localhost:80/list',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -130,6 +130,6 @@ app.get('/delete/:filename', (req, res) => {
   });
 });
 
-app.listen(3030, () => {
-  console.log('Server is running on port 3030');
+app.listen(80, () => {
+  console.log('Server is running on port 80');
 });
