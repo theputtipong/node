@@ -71,28 +71,30 @@ app.post('/upload', upload.single('video'), async (req, res) => {
       const duration = Math.ceil(video.metadata.duration.seconds);
 
       // Check if video duration is more than 5 minutes
-      if (duration > 300) {
+      if (duration > 200) {
         // Calculate number of parts to split the video into
-        const numParts = Math.ceil(duration / 300);
+        const numParts = Math.ceil(duration / 200);
 
         // Trim and split video file
         for (let i = 0; i < numParts; i++) {
-          const startTime = i * 300;
-          const endTime = Math.min((i + 1) * 300, duration);
+          const startTime = i * 200;
+          const endTime = Math.min((i + 1) * 200, duration);
 
           const outputFile = path.join(__dirname, `uploads/trimmed_${i}.mp4`);
           await video.fnTranscode(outputFile, 'libx264', 'aac', {
-            t: 300,
+            t: 200,
             start_time: startTime,
             end_time: endTime,
           });
         }
 
         // Send response indicating that video was uploaded and processed successfully
-        res.send('Video was uploaded and processed successfully!');
+        // res.send('Video was uploaded and processed successfully!');
+        res.redirect('/list');
       } else {
         // Send response indicating that video was uploaded successfully but was not processed
-        res.send('Video was uploaded successfully but was not processed because its duration is less than or equal to 5 minutes.');
+        // res.send('Video was uploaded successfully but was not processed because its duration is less than or equal to 5 minutes.');
+        res.redirect('/list');
       }
     } else {
       // Send response indicating that uploaded file is not a video or its size is more than 300MB
@@ -113,6 +115,19 @@ app.get('/download/:filename', (req, res) => {
   }
 
   res.download(filePath);
+});
+
+app.get('/delete/:filename', (req, res) => {
+  const folderPath = path.join(__dirname, 'uploads');
+  const filePath = path.join(folderPath, req.params.filename);
+  fs.unlink(filePath, err => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error deleting video');
+    }
+    // res.send('Video deleted successfully');
+    res.redirect('/list');
+  });
 });
 
 app.listen(3030, () => {

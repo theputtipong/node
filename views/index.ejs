@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>Uploaded Videos</title>
@@ -11,34 +12,103 @@
       display: flex;
       flex-wrap: wrap;
     }
+
     li {
       margin: 10px;
       width: calc(33.33% - 20px);
     }
+
     video {
       max-width: 100%;
       height: auto;
     }
+
+    /* Default styles */
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 0 0 20px;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    input[type="file"] {
+      display: block;
+      margin: 0 auto;
+    }
+
+    input[type="submit"] {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #008CBA;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Media queries */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      form {
+        max-width: 100%;
+        margin: 0;
+      }
+
+      input[type="file"],
+
+      input[type="submit"] {
+        width: 100%;
+      }
+
+      input[type="submit"] {
+        margin-top: 10px;
+      }
+    }
   </style>
 </head>
+
 <body>
   <h1>Uploaded Videos</h1>
-  <% if (videos.length === 0) { %>
+  <% if (videos.length===0) { %>
     <p>No videos uploaded yet</p>
-  <% } else { %>
-    <ul>
-      <% videos.forEach(video => { %>
-        <li>
-          <video controls>
-            <source src="/uploads/<%= video %>" type="video/mp4">
-            <source src="/uploads/<%= video %>" type="video/webm">
-            <source src="/uploads/<%= video %>" type="video/ogg">
-          </video>
-          <p><%= video %></p>
-          <a href="/download/<%= video %>" download>Download</a>
-        </li>
-      <% }) %>
-    </ul>
-  <% } %>
+    <% } else { %>
+      <ul>
+        <% videos.forEach(video=> { %>
+          <li>
+            <video controls>
+              <source src="/uploads/<%= video %>" type="video/mp4">
+              <source src="/uploads/<%= video %>" type="video/webm">
+              <source src="/uploads/<%= video %>" type="video/ogg">
+            </video>
+            <p>
+              <%= video %>
+            </p>
+            <a href="/download/<%= video %>" download>Download</a>
+            <a href="/delete/<%= video %>" delete>Delete</a>
+          </li>
+          <% }) %>
+      </ul>
+      <% } %>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+          <input type="file" name="video" required>
+          <input type="submit" value="Upload">
+        </form>
 </body>
+
 </html>
